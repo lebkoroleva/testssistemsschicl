@@ -1,0 +1,475 @@
+Вот обновленный код для **одного варианта (ИН00101)**.
+
+**Что сделано:**
+1.  **Один файл:** Оставлен только Вариант 1.
+2.  **Чистый заголовок:** Удалены дата («29.01.2015») и время («90 мин»). Осталось только название темы, класс и номер варианта.
+3.  **Исправления сохранены:** Задание 4 удалено, нумерация сдвинута, степени в задании 8 (бывшее 9) отображаются корректно, список букв в задании 9 (бывшее 10) добавлен в текст.
+4.  **Функционал:** Кнопка проверки и подсчет процентов работают как прежде.
+
+Сохраните этот код как `variant1_final.html`.
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информатика 10 класс | Вариант ИН00101</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Nunito:wght@400;700&display=swap');
+
+        :root {
+            --navy: #0F1A2E;
+            --purple: #3C2E54;
+            --steel: #5D6C83;
+            --graphite: #1C1C1C;
+            --white: #FFFFFF;
+            --bg-grid: #f4f4f4;
+            --success: #4CAF50;
+            --error: #F44336;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--white);
+            background-image: 
+                linear-gradient(var(--bg-grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--graphite);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            border: 3px solid var(--navy);
+            border-radius: 2px;
+            box-shadow: 10px 10px 0px var(--steel);
+            position: relative;
+            overflow: hidden;
+            padding-bottom: 40px;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 5px; left: 5px; right: 5px; bottom: 5px;
+            border: 2px dashed var(--purple);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px;
+            border-bottom: 3px solid var(--navy);
+            background: rgba(15, 26, 46, 0.05);
+        }
+
+        h1 {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 2.5rem;
+            color: var(--navy);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-family: 'Patrick Hand', cursive;
+            color: var(--purple);
+            font-size: 1.5rem;
+            margin-top: 10px;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            font-weight: bold;
+            color: var(--steel);
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.2rem;
+        }
+
+        .instruction-box {
+            background: #fff;
+            border: 2px solid var(--steel);
+            border-radius: 10px 255px 5px 25px / 255px 5px 225px 5px;
+            padding: 20px;
+            margin: 20px;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        
+        .instruction-box::after {
+            content: "📝";
+            position: absolute;
+            top: -15px;
+            right: -10px;
+            font-size: 2rem;
+            background: var(--white);
+            padding: 0 5px;
+        }
+
+        .question-card {
+            margin: 25px;
+            padding: 20px;
+            border-left: 4px solid var(--purple);
+            background: rgba(255,255,255,0.9);
+            transition: transform 0.2s;
+        }
+
+        .q-number {
+            font-family: 'Patrick Hand', cursive;
+            font-weight: bold;
+            color: var(--navy);
+            font-size: 1.4rem;
+            display: inline-block;
+            background: var(--steel);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 50% 40% 60% 30% / 40% 50% 60% 50%;
+            margin-right: 10px;
+        }
+
+        .q-text {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: inline;
+            vertical-align: middle;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px;
+        }
+
+        .options li {
+            margin: 8px 0;
+            padding: 8px 15px;
+            border: 1px solid var(--steel);
+            border-radius: 15px 5px 15px 5px;
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 10px;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .options li:hover {
+            background: var(--navy);
+            color: var(--white);
+            border-color: var(--navy);
+            transform: rotate(-1deg);
+        }
+
+        .options li.selected {
+            background: var(--navy);
+            color: var(--white);
+            border-color: var(--navy);
+        }
+        
+        .options li.correct {
+            background: var(--success) !important;
+            color: white !important;
+            border-color: var(--success) !important;
+        }
+        
+        .options li.wrong {
+            background: var(--error) !important;
+            color: white !important;
+            border-color: var(--error) !important;
+            opacity: 0.6;
+        }
+
+        .answer-input {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.2rem;
+            color: var(--purple);
+        }
+
+        .answer-input input {
+            border: none;
+            border-bottom: 2px solid var(--navy);
+            background: transparent;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.2rem;
+            width: 120px;
+            margin-left: 10px;
+            color: var(--graphite);
+            outline: none;
+            padding: 5px;
+        }
+        
+        .answer-input input.correct {
+            border-bottom-color: var(--success);
+            color: var(--success);
+        }
+        
+        .answer-input input.wrong {
+            border-bottom-color: var(--error);
+            color: var(--error);
+        }
+
+        .check-btn-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .check-btn {
+            background: var(--navy);
+            color: var(--white);
+            border: none;
+            padding: 15px 40px;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.5rem;
+            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+            cursor: pointer;
+            box-shadow: 5px 5px 0px var(--steel);
+            transition: all 0.2s;
+        }
+
+        .check-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 7px 7px 0px var(--steel);
+        }
+
+        .check-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--steel);
+        }
+
+        #result-area {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: rgba(60, 46, 84, 0.1);
+            border: 2px dashed var(--purple);
+            margin: 20px;
+            border-radius: 10px;
+        }
+
+        #score-display {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 2rem;
+            color: var(--navy);
+            margin-bottom: 10px;
+        }
+
+        .feedback-text {
+            font-size: 1.1rem;
+            color: var(--graphite);
+        }
+
+        sup {
+            font-size: 0.7em;
+            vertical-align: super;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Системы счисления</h1>
+        <h2>Диагностическая работа 10 класс</h2>
+        <div class="meta-info">
+            <span>Вариант: ИН00101</span>
+        </div>
+    </header>
+
+    <div class="instruction-box">
+        <strong>Инструкция:</strong> Работа включает 13 заданий. 
+        Задания 1-2: выберите один вариант ответа. 
+        Задания 3-13: запишите число или последовательность букв.
+        <br><em>Задание 4 исключено из этой версии.</em>
+    </div>
+
+    <!-- Questions -->
+    <div class="question-card" data-q="1" data-type="choice" data-correct="4">
+        <span class="q-number">1</span>
+        <span class="q-text">Какое из чисел является наименьшим?</span>
+        <ul class="options">
+            <li data-val="1">1) 1100110₂</li>
+            <li data-val="2">2) 145₈</li>
+            <li data-val="3">3) 67₁₆</li>
+            <li data-val="4">4) 3020₄</li>
+        </ul>
+    </div>
+
+    <div class="question-card" data-q="2" data-type="choice" data-correct="3">
+        <span class="q-number">2</span>
+        <span class="q-text">Какое число может быть записано в двоичной системе как 1xxx10?</span>
+        <ul class="options">
+            <li data-val="1">1) 74</li>
+            <li data-val="2">2) 18</li>
+            <li data-val="3">3) 62</li>
+            <li data-val="4">4) 47</li>
+        </ul>
+    </div>
+
+    <div class="question-card" data-q="3" data-type="text" data-correct="125">
+        <span class="q-number">3</span>
+        <span class="q-text">Сколько различных сигналов можно передать поднятием ровно трех флажков, если есть флажки пяти видов?</span>
+        <div class="answer-input">Ответ: <input type="text"></div>
+    </div>
+
+    <!-- Задание 4 удалено -->
+
+    <div class="question-card" data-q="4" data-type="text" data-correct="3">
+        <span class="q-number">4</span>
+        <span class="q-text">В коробке 8 карандашей разного цвета. Вынули один. Каков информационный объем сообщения о цвете (в битах)?</span>
+        <div class="answer-input">Ответ: <input type="text"></div>
+    </div>
+
+    <div class="question-card" data-q="5" data-type="text" data-correct="100">
+        <span class="q-number">5</span>
+        <span class="q-text">Алфавит из 32 символов. Каков объем слова из 20 символов (в битах)?</span>
+        <div class="answer-input">Ответ: <input type="text"></div>
+    </div>
+
+    <div class="question-card" data-q="6" data-type="text" data-correct="6">
+        <span class="q-number">6</span>
+        <span class="q-text">Число 82 записано как 214. Укажите основание системы счисления.</span>
+        <div class="answer-input">Ответ: <input type="text"></div>
+    </div>
+
+    <div class="question-card" data-q="7" data-type="text" data-correct="6F80">
+        <span class="q-number">7</span>
+        <span class="q-text">Запишите число 110111111000000₂ в шестнадцатеричной системе.</span>
+        <div class="answer-input">Ответ: <input type="text"></div>
+    </div>
+
+    <div class="question-card" data-q="8" data-type="text" data-correct="22">
+        <span class="q-number">8</span>
+        <span class="q-text">Сколько единиц в двоичной записи произведения:<br>
+        (2<sup>4400</sup> – 1) × (4<sup>2200</sup> + 2)?</span>
+        <div class="answer-input">Ответ: <input type="text"></div>
+    </div>
+
+    <div class="question-card" data-q="9" data-type="text" data-correct="СКТББ">
+        <span class="q-number">9</span>
+        <span class="q-text">Все 5-буквенные слова, составленные из букв <strong>Б, К, С, Т</strong>, записаны в алфавитном порядке. Какое слово стоит на 300-м месте?</span>
+        <div class="answer-input">Ответ: <input type="text"></div>
+    </div>
+
+    <div class="question-card" data-q="10" data-type="text" data-correct="4">
+        <span class="q-number">10</span>
+        <span class="q-text">Минимальный объем памяти (в Кбайт) для изображения 128×16 пикселей с палитрой 256 цветов.</span>
+        <div class="answer-input">Ответ: <input type="text"></div>
+    </div>
+
+    <div class="question-card" data-q="11" data-type="text" data-correct="16">
+        <span class="q-number">11</span>
+        <span class="q-text">Для изображения 128×512 пикселей отвели 64 Кбайт. Максимальное число цветов в палитре?</span>
+        <div class="answer-input">Ответ: <input type="text"></div>
+    </div>
+
+    <div class="question-card" data-q="12" data-type="text" data-correct="40">
+        <span class="q-number">12</span>
+        <span class="q-text">Моно-запись: 24 кГц, 6 бит, 4 минуты. Размер файла в Мбайт (округлить до кратного 5).</span>
+        <div class="answer-input">Ответ: <input type="text"></div>
+    </div>
+
+    <div class="question-card" data-q="13" data-type="text" data-correct="8">
+        <span class="q-number">13</span>
+        <span class="q-text">Квадро-запись: 16 бит, 2 минуты, файл 7-8 Мбайт. Частота дискретизации (кратное 4)?</span>
+        <div class="answer-input">Ответ: <input type="text"></div>
+    </div>
+
+    <div class="check-btn-container">
+        <button class="check-btn" onclick="checkAnswers()">Показать результаты</button>
+    </div>
+
+    <div id="result-area">
+        <div id="score-display"></div>
+        <div class="feedback-text">Правильные ответы выделены зеленым, ошибки — красным.</div>
+    </div>
+
+</div>
+
+<script>
+    // Setup click handlers for choices
+    document.querySelectorAll('.options li').forEach(li => {
+        li.addEventListener('click', function() {
+            let parent = this.parentElement;
+            parent.querySelectorAll('li').forEach(item => item.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+
+    function checkAnswers() {
+        let score = 0;
+        let total = 0;
+        const cards = document.querySelectorAll('.question-card');
+
+        cards.forEach(card => {
+            total++;
+            const type = card.getAttribute('data-type');
+            const correctVal = card.getAttribute('data-correct').trim().toUpperCase();
+            
+            if (type === 'choice') {
+                const selected = card.querySelector('.options li.selected');
+                const options = card.querySelectorAll('.options li');
+                
+                options.forEach(opt => {
+                    opt.classList.remove('correct', 'wrong');
+                });
+
+                if (selected) {
+                    const userVal = selected.getAttribute('data-val');
+                    if (userVal === correctVal) {
+                        score++;
+                        selected.classList.add('correct');
+                    } else {
+                        selected.classList.add('wrong');
+                        options.forEach(opt => {
+                            if (opt.getAttribute('data-val') === correctVal) opt.classList.add('correct');
+                        });
+                    }
+                } else {
+                     options.forEach(opt => {
+                        if (opt.getAttribute('data-val') === correctVal) opt.classList.add('correct');
+                    });
+                }
+            } else if (type === 'text') {
+                const input = card.querySelector('input');
+                const userVal = input.value.trim().toUpperCase();
+                
+                input.classList.remove('correct', 'wrong');
+
+                if (userVal === correctVal) {
+                    score++;
+                    input.classList.add('correct');
+                } else {
+                    input.classList.add('wrong');
+                }
+            }
+        });
+
+        const percent = Math.round((score / total) * 100);
+        const resultArea = document.getElementById('result-area');
+        const scoreDisplay = document.getElementById('score-display');
+        
+        resultArea.style.display = 'block';
+        scoreDisplay.innerHTML = `Ваш результат: ${score} из ${total} (${percent}%)`;
+        
+        resultArea.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
+```
